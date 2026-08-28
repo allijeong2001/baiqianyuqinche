@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Love Note</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- 漂浮装饰：钻石与星光 -->
+<div class="float-deco" id="floatDeco"></div>
+
+<!-- 红黑主题装饰：乌鸦与钻石 -->
+<div class="deco-zone" aria-hidden="true">
+  <svg class="crow stand crow-l" viewBox="0 0 110 90">
+    <polygon points="16,42 2,28 8,54 18,50" fill="#070001"/>
+    <ellipse cx="50" cy="50" rx="32" ry="22" transform="rotate(-8 50 50)" fill="#070001"/>
+    <path d="M66 36 Q74 28 78 26 Q70 24 66 32 Z" fill="#070001"/>
+    <circle cx="78" cy="26" r="14" fill="#070001"/>
+    <polygon points="90,22 106,24 90,30" fill="#141414"/>
+    <circle class="crow-eye" cx="81" cy="23" r="2.6" fill="#ff2d3a"/>
+    <path d="M18 46 Q40 14 72 28 Q58 32 56 42 Q40 46 30 54 Q22 52 18 46 Z" fill="#141414"/>
+    <path d="M44 70 L42 86 M42 78 L36 80 M42 78 L48 80" stroke="#070001" stroke-width="3" stroke-linecap="round" fill="none"/>
+    <path d="M56 68 L57 84 M57 76 L51 78 M57 76 L63 78" stroke="#070001" stroke-width="3" stroke-linecap="round" fill="none"/>
+  </svg>
+  <svg class="crow fly crow-r" viewBox="0 0 120 60">
+    <g transform="translate(120 0) scale(-1 1)">
+      <ellipse cx="60" cy="32" rx="9" ry="7" fill="#070001"/>
+      <path d="M56 30 C50 20 38 12 22 14 C16 15 16 20 22 21 C34 23 44 26 52 32 Z" fill="#070001"/>
+      <path d="M64 30 C70 20 82 12 98 14 C104 15 104 20 98 21 C86 23 76 26 68 32 Z" fill="#070001"/>
+      <path d="M56 36 L46 50 L60 44 L72 52 L62 38 Z" fill="#070001"/>
+      <circle cx="64" cy="26" r="4.5" fill="#070001"/>
+      <polygon points="68,25 76,26 68,28" fill="#141414"/>
+    </g>
+  </svg>
+  <svg class="crow fly crow-m" viewBox="0 0 120 60">
+    <ellipse cx="60" cy="32" rx="9" ry="7" fill="#070001"/>
+    <path d="M56 30 C50 20 38 12 22 14 C16 15 16 20 22 21 C34 23 44 26 52 32 Z" fill="#070001"/>
+    <path d="M64 30 C70 20 82 12 98 14 C104 15 104 20 98 21 C86 23 76 26 68 32 Z" fill="#070001"/>
+    <path d="M56 36 L46 50 L60 44 L72 52 L62 38 Z" fill="#070001"/>
+    <circle cx="64" cy="26" r="4.5" fill="#070001"/>
+    <polygon points="68,25 76,26 68,28" fill="#141414"/>
+  </svg>
+  <i class="gem g1"></i>
+  <i class="gem g2"></i>
+  <i class="gem g3"></i>
+  <i class="gem g4"></i>
+</div>
+
+<div class="page">
+
+  <div class="home-head">
+    <div class="home-names" id="homeNames"></div>
+    <div class="home-lovenote-row">
+      <i class="gem gem-inline"></i>
+      <span class="home-lovenote" id="homeLoveNote"></span>
+      <i class="gem gem-inline"></i>
+    </div>
+    <div class="home-slogan" id="homeSlogan"></div>
+  </div>
+
+  <!-- 三个爱心入口 -->
+  <div class="hearts" id="hearts"></div>
+
+  <div class="home-footer" id="homeFooter">💎 made with love 💎</div>
+</div>
+
+<script src="config.js"></script>
+<script>
+(function () {
+  var g = SITE_CONFIG.global;
+  var home = SITE_CONFIG.home;
+
+  /* 应用全局配色 */
+  document.documentElement.style.setProperty('--grad-from', g.gradientFrom);
+  document.documentElement.style.setProperty('--grad-to', g.gradientTo);
+  document.documentElement.style.setProperty('--text-color', g.textColor);
+  document.title = g.siteTitle;
+
+  /* 主页文案 */
+  document.getElementById('homeNames').textContent = g.coupleNames;
+  document.getElementById('homeLoveNote').textContent = g.loveNoteText;
+  document.getElementById('homeSlogan').textContent = g.slogan;
+
+  /* 渲染三个爱心入口 */
+  var heartsBox = document.getElementById('hearts');
+  home.hearts.forEach(function (h) {
+    var item = document.createElement('div');
+    item.className = 'heart-item';
+
+    var btn = document.createElement('a');
+    btn.className = 'heart-btn';
+    btn.href = h.url || '#';
+    btn.style.setProperty('--heart-color', h.color);
+    btn.innerHTML =
+      '<span class="shape"></span>' +
+      '<span class="heart-content">' +
+        '<span class="heart-icon">' + h.icon + '</span>' +
+        '<span class="heart-label">' + escapeHtml(h.label) + '</span>' +
+      '</span>';
+
+    var sub = document.createElement('div');
+    sub.className = 'heart-sub';
+    sub.textContent = h.subLabel || '';
+
+    item.appendChild(btn);
+    item.appendChild(sub);
+    heartsBox.appendChild(item);
+  });
+
+  /* 漂浮装饰 */
+  var deco = document.getElementById('floatDeco');
+  var symbols = ['💎', '◆', '✦', '❤️', '◆', '💎'];
+  for (var i = 0; i < 12; i++) {
+    var s = document.createElement('span');
+    s.textContent = symbols[i % symbols.length];
+    s.style.left = (Math.random() * 100) + '%';
+    s.style.fontSize = (12 + Math.random() * 16) + 'px';
+    s.style.animationDuration = (9 + Math.random() * 14) + 's';
+    s.style.animationDelay = (-Math.random() * 16) + 's';
+    deco.appendChild(s);
+  }
+
+  function escapeHtml(str) {
+    return String(str == null ? '' : str)
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+  }
+})();
+</script>
+</body>
+</html>
